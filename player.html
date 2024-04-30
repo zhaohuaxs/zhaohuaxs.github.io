@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="doc" content="http://dplayer.js.org/zh/guide.html">
+    <title>朝花夕拾播放器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.6.2/flv.min.js" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.1.5/hls.min.js" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webtorrent/1.8.22/webtorrent.min.js" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/4.4.0/dash.all.min.js" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dplayer/1.26.0/DPlayer.min.js" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+    <div id="dplayer" style="width: 80%; margin: auto;"></div>
+    <script>
+        const dp = new DPlayer({
+            container: document.getElementById('dplayer'),
+            autoplay: false,
+            theme: '#FADFA3',
+            live: false,
+            loop: true,
+            lang: 'zh-cn',
+            screenshot: false,
+            hotkey: true,
+            preload: 'auto',
+            logo: 'https://gitlab.com/xxll/static-file/-/raw/main/image/doge.png',
+            volume: 0.7,
+            mutex: true,
+            video: {
+                url: './rec/1_hello_world.m3u8',
+                pic: '',
+                thumbnails: '',
+                type: 'auto',
+            },
+            subtitle: {
+                url: './',
+                type: 'webvtt',
+                fontSize: '25px',
+                bottom: '10%',
+                color: '#b7daff',
+            },
+            danmaku: {
+                id: 'zhxs',
+                api: './dm/helloworld.json?v=',
+                token: 'zhxs',
+                maximum: 1000,
+                addition: [],
+                user: 'zhxs',
+                bottom: '15%',
+                unlimited: true,
+            },
+            contextmenu: [
+                {
+                    text: '没啥事不要点',
+                    click: (player) => {
+                        console.log(player);
+                    },
+                },
+            ],
+            highlight: [
+                {
+                    time: 17,
+                    text: '这是短暂的循环',
+                }
+            ],
+        });
+    </script>
+    <span style="display: none;"></span>
+</body>
+
+</html>

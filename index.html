@@ -1,75 +1,59 @@
-<!DOCTYPE html>
-<html>
-
+<!doctype html>
+<html lang="zh-CN">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
-    <meta name="doc" content="http://dplayer.js.org/zh/guide.html">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"/>
+    <meta name="renderer" content="webkit"/>
+
+    <link rel="stylesheet" href="https://unpkg.com/mdui@2/mdui.css">
+    <script src="https://unpkg.com/mdui@2/mdui.global.js"></script>
+    <!-- 如果使用了组件的 icon 属性，还需要引入图标的 CSS 文件 -->
+
     <title>朝花夕拾</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.6.2/flv.min.js" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.1.5/hls.min.js" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/webtorrent/1.8.22/webtorrent.min.js" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/4.4.0/dash.all.min.js" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dplayer/1.26.0/DPlayer.min.js" referrerpolicy="no-referrer"></script>
 </head>
-
 <body>
-    <div id="dplayer" style="width: 80%; margin: auto;"></div>
-    <script>
-        const dp = new DPlayer({
-            container: document.getElementById('dplayer'),
-            autoplay: false,
-            theme: '#FADFA3',
-            live: false,
-            loop: true,
-            lang: 'zh-cn',
-            screenshot: false,
-            hotkey: true,
-            preload: 'auto',
-            logo: 'https://gitlab.com/xxll/static-file/-/raw/main/image/doge.png',
-            volume: 0.7,
-            mutex: true,
-            video: {
-                url: './rec/1_hello_world.m3u8',
-                pic: '',
-                thumbnails: '',
-                type: 'auto',
-            },
-            subtitle: {
-                url: './',
-                type: 'webvtt',
-                fontSize: '25px',
-                bottom: '10%',
-                color: '#b7daff',
-            },
-            danmaku: {
-                id: 'zhxs',
-                api: './dm/helloworld.json?v=',
-                token: 'zhxs',
-                maximum: 1000,
-                addition: [],
-                user: 'zhxs',
-                bottom: '15%',
-                unlimited: true,
-            },
-            contextmenu: [
-                {
-                    text: '没啥事不要点',
-                    click: (player) => {
-                        console.log(player);
-                    },
-                },
-            ],
-            highlight: [
-                {
-                    time: 17,
-                    text: '这是短暂的循环',
-                }
-            ],
-        });
-    </script>
-    <span style="display: none;"></span>
-</body>
+<mdui-layout>
+    <mdui-top-app-bar class="example-top-app-bar">
+        <mdui-top-app-bar-title>朝花夕拾 - 网站导航</mdui-top-app-bar-title>
+    </mdui-top-app-bar>
 
+    <mdui-layout-item
+            placement="left"
+            class="example-layout-item"
+            style="width: 20%">
+
+    </mdui-layout-item>
+
+    <mdui-layout-item
+            placement="right"
+            class="example-layout-item"
+            style="width: 20%">
+
+    </mdui-layout-item>
+
+    <mdui-layout-main class="example-layout-main" style="min-height: 300px">
+        <mdui-button>影视导航</mdui-button>
+        <mdui-list>
+            <mdui-list-item alignment="start" href="https://ddys.tv/">
+                <mdui-avatar src="https://ddys.pro/favicon-32x32.png">DD</mdui-avatar>
+                低端影视 - 超清在线视频站
+            </mdui-list-item>
+            <mdui-list-item alignment="start" href="https://ddys.info/">
+                <mdui-avatar src="https://ddys.pro/favicon-32x32.png">DD</mdui-avatar>
+                低端影视 - 网站发布页
+            </mdui-list-item>
+            <mdui-list-item alignment="start" href="https://mxdm.tv/">
+                <mdui-avatar>MX</mdui-avatar>
+                MX动漫 - 专注在线动漫
+            </mdui-list-item>
+            <mdui-list-item alignment="start" href="https://ntdm.tv/">
+                <mdui-avatar>NT</mdui-avatar>
+                NT动漫 - 新番在线动漫
+            </mdui-list-item>
+
+        </mdui-list>
+    </mdui-layout-main>
+</mdui-layout>
+
+</body>
 </html>
