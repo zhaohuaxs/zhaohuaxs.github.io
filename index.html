@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 全局字体与背景 */
+        body {
+            font-family: 'Comic Sans MS', serif, sans-serif, monospace, cursive;
+            background-color: #f0f8ff;
+            color: #2a2a72;
+        }
+
+        /* 顶部导航栏 */
+        nav {
+            background-color: #a6e1fa;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        nav .text-xl {
+            color: #ff69b4;
+            text-shadow: 2px 2px 0 #ffffff;
+        }
+
+        nav a {
+            color: #2a2a72;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        nav a img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+
+        nav a.active {
+            color: #ff69b4;
+        }
+
+        nav a:hover {
+            color: #ff69b4;
+        }
+
+        /* 新增弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #a6e1fa;
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            color: #ff69b4;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content p {
+            margin-bottom: 2rem;
+            color: #2a2a72;
+            word-wrap:break-word;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .modal-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.cancel {
+            background-color: #f0f8ff;
+            color: #2a2a72;
+        }
+
+        .modal-btn.go {
+            background-color: #ff69b4;
+            color: white;
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 新增提示样式 */
+        .toast {
+            position: fixed;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* 主内容区域 */
+        main {
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://upload-bbs.miyoushe.com/upload/2024/10/19/312784818/c0fabcee407d7eb45a9b8579589e8bd5_4072079007955827005.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(10px);
+            opacity: 0.95;
+            z-index: -1;
+        }
+
+        main h1 {
+            font-size: 3rem;
+            color: #ff69b4;
+            text-shadow: 3px 3px 0 #ffffff;
+        }
+
+        main h2 {
+            font-size: 1.5rem;
+            color: #2a2a72;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background-color: #ff69b4;
+            color: #ffffff;
+            border-radius: 20px;
+            padding: 0.8rem 2rem;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            background-color: #ff1493;
+        }
+
+        /* 图片展示 */
+        .grid img {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .grid img:hover {
+            transform: scale(1.05);
+        }
+
+        /* 常见问题区域 */
+        section {
+            padding: 2rem;
+        }
+
+        section h2 {
+            font-size: 2rem;
+            color: #ff69b4;
+            text-shadow: 2px 2px 0 #ffffff;
+        }
+
+        .question {
+            cursor: pointer;
+            background-color: #a6e1fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .question:hover {
+            background-color: #87cefa;
+        }
+
+        .answer {
+            display: none;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        /* 底部区域 */
+        footer {
+            background-color: #a6e1fa;
+            padding: 1rem;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        footer p {
+            color: #2a2a72;
+        }
+
+        footer a {
+            color: #ff69b4;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #ff1493;
+        }
+
+        /* 手机端汉堡菜单 */
+        #mobile-menu {
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+
+        #mobile-menu a {
+            justify-content: flex-start;
+        }
+    </style>
+    <title>弹目-Android端弹幕编辑工具</title>
+</head>
+
+<body>
+<!-- 顶部导航栏 -->
+<nav>
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="text-xl font-bold">LingCiApp</div>
+        <div class="hidden md:flex space-x-4 nav-btn">
+            <a href="#" class="active">
+                <img src="./icon/ic_dm.webp" alt="弹目APP 图标">
+                弹目APP
+            </a>
+            <a href="dy-like.html">
+                <img src="./icon/ic_dy.webp" alt="DyLike-Player 图标">
+                DyLike - Player
+            </a>
+            <a href="nav.html" target="_blank">导航</a>
+        </div>
+        <div class="md:hidden">
+            <button id="menu-toggle" class="text-gray-600 focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-gray-100 p-4">
+        <a href="#" class="active py-2 hover:underline">
+            <img src="./icon/ic_dm.webp" alt="弹目APP 图标">
+            弹目APP
+        </a>
+        <a href="./dy-like.html" class=" py-2 hover:underline">
+            <img src="./icon/ic_dy.webp" alt="DyLike-Player 图标">
+            DyLike-Player
+        </a>
+        <a href="./nav.html" target="_blank" class="block py-2 hover:underline">导航</a>
+    </div>
+</nav>
+
+<!-- 主内容区域 -->
+<main class="container mx-auto text-center">
+    <div class="main-bg-pattern"></div>
+    <h1>Android端弹幕编辑工具</h1>
+    <h2>自定义编辑本地弹幕文件，合并、分割、修改、调色，更多。</h2>
+    <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4 mb-8">
+        <a href="#" onclick="showDownloadModal()" class="btn">下载尝试</a>
+        <a href="./dy-like.html" class="btn">DyLike-渐变弹幕播放器</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <img src="./image/img_home.webp"
+             alt="App 展示图片">
+        <img src="./image/img_color.webp"
+             alt="App 展示图片">
+        <img src="./image/img_preview.webp"
+             alt="App 展示图片">
+    </div>
+</main>
+
+<!-- 下载弹窗 -->
+<div id="downloadModal" class="modal">
+    <div class="modal-content">
+        <h3>下载弹目APP</h3>
+        <p>蓝奏: https://wwwh.lanzoul.com/b002uxm23e</p>
+        <p>密码: 9amg</p>
+        <div class="modal-buttons">
+            <button class="modal-btn cancel" onclick="closeModal()">取消</button>
+            <button class="modal-btn go" onclick="goToDownload()">前往</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- 常见问题区域 -->
+<section class="container mx-auto">
+    <h2>常见问题解答</h2>
+    <div class="border border-gray-300 rounded-md p-4">
+        <div class="question mb-2" onclick="toggleAnswer(1)">
+            <h3 class="text-lg font-semibold">是否支持别的平台？</h3>
+        </div>
+        <div id="answer-1" class="answer mb-4">
+            <p>仅 Android 平台</p>
+        </div>
+        <div class="question mb-2" onclick="toggleAnswer(2)">
+            <h3 class="text-lg font-semibold">弹幕描边渐变调色有什么播放器可以支持</h3>
+        </div>
+        <div id="answer-2" class="answer mb-4">
+            <p>目前仅配套开发的 DyLike 支持渐变描边，同样仅支持 Android 平台</p>
+        </div>
+        <div class="question" onclick="toggleAnswer(3)">
+            <h3 class="text-lg font-semibold">我有很多问题想要反馈，去哪？</h3>
+        </div>
+        <div id="answer-3" class="answer">
+            <p>有的有的，扣扣群：811806197</p>
+        </div>
+    </div>
+</section>
+
+<!-- 底部区域 -->
+<footer class="text-center">
+    <p>享受弹幕的乐趣</p>
+    <div class="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-4 mt-2">
+        <a href="https://danmubox.github.io" target="_blank" class="hover:underline">弹幕盒子</a>
+        <a href="https://github.com/zhaohuaxs" target="_blank" class="hover:underline">Github</a>
+        <a href="https://www.miyoushe.com/bh3/article/58687276" target="_blank" class="hover:underline">背景图©阙停乌</a>
+    </div>
+    <p class="mt-4">© 2025 ZhaoHuaXS & Trae 版权所有</p>
+</footer>
+
+<script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    function toggleAnswer(id) {
+        const answer = document.getElementById(`answer-${id}`);
+        answer.classList.toggle('display');
+        answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function showDownloadModal() {
+        document.getElementById('downloadModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('downloadModal').style.display = 'none';
+    }
+
+    function goToDownload() {
+        // 复制到剪贴板
+        navigator.clipboard.writeText("9amg")
+            .then(() => {
+                // 显示复制成功提示
+                //alert("已复制9amg");
+                // 显示自定义提示
+                const toast = document.getElementById('toast');
+                toast.textContent = '已复制9amg'
+                toast.classList.add('show');
+
+                // 3秒后自动隐藏
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+                setTimeout(() => {
+                    // 跳转到下载链接
+                    window.open('https://wwwh.lanzoul.com/b002uxm23e', '_blank');
+                }, 1000);
+            })
+            .catch(err => {
+                console.error('复制失败:', err);
+                // 复制失败时仍然跳转
+                window.open('https://wwwh.lanzoul.com/b002uxm23e', '_blank');
+            });
+    }
+</script>
+</body>
+
+</html>

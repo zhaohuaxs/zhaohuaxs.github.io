@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 使用与index.html相同的样式 */
+        body {
+            font-family: 'Comic Sans MS', serif, sans-serif, monospace, cursive;
+            background-color: #f0f8ff;
+            color: #2a2a72;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #a6e1fa;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-title {
+            font-size: 1.5rem;
+            line-height: 1.75rem;
+            color: #ff69b4;
+            font-weight: 700;
+            text-shadow: 2px 2px 0 #ffffff;
+        }
+
+        .back-btn {
+            background-color: #ff69b4;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        /* 手机端适配 */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0.5rem;
+            }
+            .nav-title {
+                font-size: 1.2rem;
+            }
+            .back-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            font-size: 1.25rem;
+            color: #ff69b4;
+            margin-bottom: 0.8rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-list {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            color: #2a2a72;
+        }
+
+        .nav-item:last-child {
+            border-bottom: none;
+        }
+
+        .nav-item:hover {
+            background-color: #f0f8ff;
+        }
+
+        .nav-item-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            object-fit: cover;
+        }
+
+        .nav-item-text {
+            flex-grow: 1;
+        }
+
+        .nav-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #a6e1fa;
+            border-radius: 10px;
+        }
+    </style>
+    <title>朝花夕拾 - 网站导航</title>
+</head>
+<body>
+<div class="nav-header">
+    <div class="nav-title">朝花夕拾 - 网站导航</div>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-home"></i> 返回首页
+    </a>
+</div>
+
+<div class="nav-container">
+    <div class="nav-section">
+        <div class="nav-section-title">影视导航</div>
+        <div class="nav-list">
+            <a href="https://ddys.tv/" target="_blank" class="nav-item">
+                <img src="https://ddys.pro/favicon-32x32.png" class="nav-item-avatar">
+                <div class="nav-item-text">低端影视 - 超清在线视频站</div>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://ddys.info/" target="_blank" class="nav-item">
+                <img src="https://ddys.pro/favicon-32x32.png" class="nav-item-avatar">
+                <div class="nav-item-text">低端影视 - 网站发布页</div>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://lmmzx.com/" target="_blank" class="nav-item">
+                <img src="https://lmm.qg50.com/images/image01.png" class="nav-item-avatar">
+                <div class="nav-item-text">路漫漫 - 在线动漫</div>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://lmm.qg50.com/" target="_blank" class="nav-item">
+                <img src="https://lmm.qg50.com/images/image01.png" class="nav-item-avatar">
+                <div class="nav-item-text">路漫漫 - 网站发布页</div>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://mxdm.tv/" target="_blank" class="nav-item">
+                <div class="nav-item-avatar" style="background-color: #a6e1fa; display: flex; align-items: center; justify-content: center;">MX</div>
+                <div class="nav-item-text">MX动漫 - 专注在线动漫</div>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://ntdm.tv/" target="_blank" class="nav-item">
+                <div class="nav-item-avatar" style="background-color: #a6e1fa; display: flex; align-items: center; justify-content: center;">NT</div>
+                <div class="nav-item-text">NT动漫 - 新番在线动漫</div>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://www.mutedm.com/" target="_blank" class="nav-item">
+                <div class="nav-item-avatar" style="background-color: #a6e1fa; display: flex; align-items: center; justify-content: center;">MT</div>
+                <div class="nav-item-text">MUTE动漫 - 新番在线动漫</div>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://www.libvio.fun/" target="_blank" class="nav-item">
+                <img src="https://www.libvio.fun/statics/img/favicon.ico" class="nav-item-avatar">
+                <div class="nav-item-text">LIBVIO - 在线影音</div>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://www.libvio.app/" target="_blank" class="nav-item">
+                <img src="https://www.libvio.fun/statics/img/favicon.ico" class="nav-item-avatar">
+                <div class="nav-item-text">LIBVIO - 网站发布页</div>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-section-title">弹幕工具导航</div>
+        <div class="nav-list">
+            <a href="https://neo.delflare505.win/" target="_blank" class="nav-item">
+                <img src="https://neo.delflare505.win/favicon.ico" class="nav-item-avatar">
+                <div class="nav-item-text">DFUtil - 弹幕在线工具</div>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://danmubox.github.io/" target="_blank" class="nav-item">
+                <img src="https://danmubox.github.io/favicon.ico" class="nav-item-avatar">
+                <div class="nav-item-text">弹幕盒子 - 在线弹幕仓库</div>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://fc.delflare505.win/" target="_blank" class="nav-item">
+                <div class="nav-item-avatar" style="background-color: #a6e1fa; display: flex; align-items: center; justify-content: center;">FC</div>
+                <div class="nav-item-text">主流视频网站弹幕文件解析接口</div>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="nav-footer">
+        © 2025 ZhaoHuaXS & Trae 版权所有
+    </div>
+</div>
+</body>
+</html>
