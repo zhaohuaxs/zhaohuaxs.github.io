@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="./icon/favicon.ico">
+    <title>弹目|影视链接获取</title>
+</head>
+
+<body class="bg-blue-50 text-indigo-900">
+    <div class="container mx-auto p-8 max-w-6xl">
+        <h1 class="text-3xl font-bold mb-6">爱腾优官方链接获取</h1>
+
+        <div class="mb-8">
+            <label class="block font-bold mb-2">请输入影视名称：</label>
+            <div class="relative">
+                <input id="link-input"
+                    class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-pink-500 pr-10"
+                    type="text" placeholder="影视名称">
+                <button id="clear-btn"
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <button id="submit-btn"
+                class="mt-4 px-6 py-3 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50">获取</button>
+        </div>
+
+        <div id="results-container"></div>
+    </div>
+
+    <script>
+        document.getElementById('submit-btn').addEventListener('click', fetchLink);
+        document.getElementById('link-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') fetchLink(1);
+        });
+
+        function updateFilter(key, value) {
+            let currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set(key, value);
+            if (!value || value === '') {
+                currentUrl.searchParams.delete(key)
+            }
+            window.history.replaceState({}, '', currentUrl);
+        }
+        
+        // 监听输入框变化
+        document.getElementById('link-input').addEventListener('input', function(e) {
+            const clearBtn = document.getElementById('clear-btn');
+            if (e.target.value.trim() !== '') {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+        });
+
+        // 添加清除按钮事件
+        document.getElementById('clear-btn').addEventListener('click', function () {
+            const input = document.getElementById('link-input');
+            input.value = '';
+            updateFilter('wd', '');
+            updateFilter('pg', '');
+            input.focus();
+            this.classList.add('hidden');
+        });
+
+        // 新增：页面加载时读取 URL 中的 wd 参数并自动查询
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const wd = urlParams.get('wd');
+            const pg = urlParams.get('pg');
+            if (wd) {
+                const input = document.getElementById('link-input');
+                input.value = wd;
+                fetchLink(pg); // 直接调用查询函数
+            }
+        });
+
+        function fetchLink(page = 1) {
+            const input = document.getElementById('link-input');
+            const vodName = input.value.trim();
+            if (!page) {
+                page = 1;
+            }
+            
+            if (!vodName) {
+                alert('请输入有效的影视名');
+                return;
+            }
+            updateFilter('wd', vodName);
+            updateFilter('pg', page);
+            
+            fetch('https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent('https://vs.okcdn100.top/api.php/provide/vod/?ac=detail&wd=' + vodName + '&pg=' + page), {
+                method: 'GET',
+                headers: {
+                    //'X-Requested-With': 'XMLHttpRequest',
+                    //'Origin': 'https://api.codetabs.com'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('results-container');
+                tbody.innerHTML = '';
+                data.list.forEach(item => {
+                        const playFrom = item.vod_play_from;
+                        const playUrl = item.vod_play_url;
+                        if (playFrom.includes('$$$')) {
+                            const playFromArray = playFrom.split('$$$');
+                            playUrl.split('$$$').forEach((playUrlItem, index) => {
+                                const newItem = { ...item };
+                                newItem.vod_play_from = playFromArray[index];
+                                newItem.vod_play_url = playUrlItem.trim();
+                                if (newItem.vod_play_url) {
+                                    addResultCard(newItem);
+                                }
+                            })
+                        } else {
+                            addResultCard(item);
+                        }
+                    });
+                    //input.value = '';
+                
+                // 添加分页控件
+                addPagination(data.page, data.pagecount, data.total);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('请求失败');
+            });
+        }
+        function fetchLink2() {
+            const input = document.getElementById('link-input');
+            const vodName = input.value.trim();
+
+            if (!vodName) {
+                alert('请输入有效的影视名');
+                return;
+            }
+            updateFilter('wd', vodName);
+
+            // 模拟API请求
+            fetch('/url/get/?ac=detail&wd=' + encodeURIComponent(vodName), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    //addResultCard(link, data.list);
+                    const tbody = document.getElementById('results-container');
+                    tbody.innerHTML = '';
+                    data.list.forEach(item => {
+                        const playFrom = item.vod_play_from;
+                        const playUrl = item.vod_play_url;
+                        if (playFrom.includes('$$$')) {
+                            const playFromArray = playFrom.split('$$$');
+                            playUrl.split('$$$').forEach((playUrlItem, index) => {
+                                const newItem = { ...item };
+                                newItem.vod_play_from = playFromArray[index];
+                                newItem.vod_play_url = playUrlItem.trim();
+                                if (newItem.vod_play_url) {
+                                    addResultCard(newItem);
+                                }
+                            })
+                        } else {
+                            addResultCard(item);
+                        }
+                    });
+                    //input.value = '';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('请求失败');
+                });
+        }
+
+        function addResultCard(item) {
+            const container = document.getElementById('results-container');
+            const cardId = 'card-' + item.vod_id + '-' + item.vod_play_from;
+            const urlArray = item.vod_play_url.split('#');
+
+            // 分割播放链接
+            const playUrls = urlArray.map(url => {
+                if (url) {
+                    return url.split('$')[1].trim();
+                } else {
+                    return "";
+                }
+            }).filter(url => url && url.length > 0);
+
+            // 创建格式化后的播放链接HTML
+            const formattedUrls = urlArray.map(url => {
+                return url.replace('$', ' ');
+            }).join('<br>');
+
+            // 判断演员信息，如果没有则使用标签信息
+            const actorInfo = item.vod_actor ? item.vod_actor : item.vod_tag;
+
+            // 使用模板字符串创建卡片HTML
+            const cardHTML = `
+            <div class="mb-4 rounded-lg overflow-hidden shadow-md bg-cyan-100 hover:shadow-lg transition-shadow">
+                <div 
+                    class="flex justify-between items-center p-4 cursor-pointer bg-cyan-200"
+                    onclick="toggleCard('${cardId}')">
+                    <div class="font-medium">
+                        ${item.vod_name} 
+                        <span class="text-sm text-blue-700 ml-2">
+                            ${item.vod_play_from} ${item.vod_area} ${item.vod_year} ${item.vod_remarks}
+                        </span>
+                    </div>
+                    <i class="fas fa-chevron-down text-blue-600"></i>
+                </div>
+                <div id="${cardId}" class="hidden p-4 border-t border-cyan-300">
+                    <p class="text-gray-700 mb-2">${actorInfo}</p>
+                    <p class="text-sm text-blue-600 mb-2">第一部分链接可复制到miodm（乐爱腾优工具）中下载</p>
+                    <div class="mt-4 text-sm text-gray-600">
+                        ${playUrls.join(' ')}
+                    </div>
+                    <br>
+                    <div class="space-y-2">
+                        ${formattedUrls}
+                    </div>
+                </div>
+            </div>
+        `;
+        const cardItem = `<div class="p-2 bg-teal-50 rounded break-all">${item.vod_id}</div>`;
+
+            const card = document.createElement('div');
+            card.innerHTML = cardHTML;
+            container.append(card);
+        }
+
+        function addPagination(currentPage, pageCount, totalItems) {
+            const container = document.getElementById('results-container');
+            const pagination = document.createElement('div');
+            pagination.className = 'flex justify-center items-center mt-6 space-x-2';
+            
+            // 上一页按钮
+            if (currentPage > 1) {
+                const prevBtn = document.createElement('button');
+                prevBtn.className = 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600';
+                prevBtn.textContent = '上一页';
+                prevBtn.onclick = () => fetchLink(currentPage - 1);
+                pagination.appendChild(prevBtn);
+            }
+            
+            // 页码显示
+            const pageInfo = document.createElement('span');
+            pageInfo.className = 'px-4 py-2';
+            pageInfo.textContent = `${currentPage}/${pageCount} (共${totalItems}条)`;
+            pagination.appendChild(pageInfo);
+            
+            // 下一页按钮
+            if (currentPage < pageCount) {
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600';
+                nextBtn.textContent = '下一页';
+                nextBtn.onclick = () => fetchLink(currentPage + 1);
+                pagination.appendChild(nextBtn);
+            }
+            
+            container.appendChild(pagination);
+        }
+
+        function toggleCard(cardId) {
+            // 收起所有其他card
+            document.querySelectorAll('[id^="card-"]').forEach(body => {
+                if (body.id !== cardId) {
+                    body.classList.add('hidden');
+                    const otherHeader = body.previousElementSibling;
+                    const otherIcon = otherHeader.querySelector('i');
+                    otherIcon.classList.remove('fa-chevron-up');
+                    otherIcon.classList.add('fa-chevron-down');
+                }
+            });
+
+            // 切换当前card状态
+            const cardBody = document.getElementById(cardId);
+            const cardHeader = cardBody.previousElementSibling;
+            const icon = cardHeader.querySelector('i');
+
+            cardBody.classList.toggle('hidden');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+
+        // 暴露函数给全局作用域
+        window.toggleCard = toggleCard;
+    </script>
+</body>
+
+</html>
