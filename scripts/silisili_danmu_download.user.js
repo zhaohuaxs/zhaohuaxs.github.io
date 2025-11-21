@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Silisili弹幕下载工具
 // @namespace    https://github.com/zhaohuaxs
-// @version      1.1.0
-// @description  为Silisili网站添加弹幕下载功能
+// @version      1.2.0
+// @description  为Silisili网站添加弹幕下载功能，支持选择性下载、修复复选框布局问题、增强元素检测
 // @author       LingCi
 // @copyright    2025, LingCi(https://github.com/zhaohuaxs)
 // @match        https://www.silisilifun.com/*
@@ -21,8 +21,16 @@
 (function () {
     'use strict';
 
+    // 初始化状态标志
+    let isInitialized = false;
+
     // 页面加载完成后执行
-    window.addEventListener('load', function () {
+    function initializeScript() {
+        // 检查是否已经初始化过
+        if (isInitialized) {
+            return;
+        }
+        
         // 查找目标元素
         const scoreWrap = document.querySelector('h1.scores-info > div.score-wrap');
         const titleElement = document.querySelector('h1.scores-info > a');
@@ -30,6 +38,8 @@
 
         // 检查元素是否存在
         if (scoreWrap && titleElement && playListContainer) {
+            // 设置初始化标志
+            isInitialized = true;
             // 创建下载按钮
             const downloadBtn = document.createElement('div');
             downloadBtn.id = 'dm-down';
@@ -67,27 +77,36 @@
 
             // 为每个剧集链接添加复选框
             episodeElements.forEach((element, index) => {
+                // 创建复选框容器
+                const checkboxContainer = document.createElement('div');
+                checkboxContainer.style.display = 'flex';
+                checkboxContainer.style.alignItems = 'center';
+                checkboxContainer.style.marginRight = '5px';
+                checkboxContainer.style.marginBottom = '5px';
+                checkboxContainer.style.zIndex = '9999';
+                checkboxContainer.style.position = 'relative';
+                
                 // 创建复选框
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.id = `episode-checkbox-${index}`;
                 checkbox.checked = false; // 默认不选中
-                checkbox.style.marginRight = '5px';
-                checkbox.style.zIndex = '9999';
-                checkbox.style.position = 'relative';
-
-                // 将复选框插入到li元素的开头
+                
+                // 将复选框添加到容器中
+                checkboxContainer.appendChild(checkbox);
+                
+                // 将复选框容器插入到li元素的开头
                 const liElement = element.parentElement;
-                liElement.insertBefore(checkbox, liElement.firstChild);
-
-                // 阻止复选框的点击事件冒泡到li元素
-                checkbox.addEventListener('click', function (e) {
+                liElement.insertBefore(checkboxContainer, liElement.firstChild);
+                
+                // 阻止复选框容器的点击事件冒泡到li元素
+                checkboxContainer.addEventListener('click', function(e) {
                     e.stopPropagation();
                 });
             });
 
             // 全选按钮点击事件
-            selectAllBtn.addEventListener('click', function () {
+            selectAllBtn.addEventListener('click', function() {
                 const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="episode-checkbox-"]');
                 checkboxes.forEach(checkbox => {
                     checkbox.checked = true;
@@ -95,7 +114,7 @@
             });
 
             // 反选按钮点击事件
-            invertSelectBtn.addEventListener('click', function () {
+            invertSelectBtn.addEventListener('click', function() {
                 const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="episode-checkbox-"]');
                 checkboxes.forEach(checkbox => {
                     checkbox.checked = !checkbox.checked;
@@ -103,14 +122,14 @@
             });
 
             // 下载按钮点击事件
-            downloadBtn.addEventListener('click', function () {
+            downloadBtn.addEventListener('click', function() {
                 // 获取标题文本作为名称
                 const name = titleElement.textContent.trim();
-
+                
                 // 获取所有剧集的链接元素
                 const episodeElements = document.querySelectorAll('div.play-list > div.play-pannel-box > div:nth-child(1) > #playlist-play-4 > li > a');
                 const dataIndexList = [];
-
+                
                 episodeElements.forEach((element, index) => {
                     // 检查对应的复选框是否被选中
                     const checkbox = document.querySelector(`#episode-checkbox-${index}`);
@@ -135,8 +154,26 @@
                 // 循环下载每个弹幕文件
                 downloadDanmuFiles(name, dataIndexList);
             });
+            
+            // 移除监听器，避免重复执行
+            observer.disconnect();
         }
+    }
+
+    // 在页面加载完成后尝试初始化
+    window.addEventListener('load', initializeScript);
+
+    // 使用MutationObserver监听DOM变化
+    const observer = new MutationObserver(initializeScript);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
     });
+
+    // 页面已经加载完成的情况下立即尝试初始化
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        initializeScript();
+    }
 
     // 下载弹幕文件函数
     function downloadDanmuFiles(name, dataIndexList) {
