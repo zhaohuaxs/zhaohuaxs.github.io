@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Silisili弹幕下载工具
 // @namespace    https://github.com/zhaohuaxs
-// @version      1.2.0
-// @description  为Silisili网站添加弹幕下载功能，支持选择性下载、修复复选框布局问题、增强元素检测
+// @version      1.2.1
+// @description  为Silisili网站添加弹幕下载功能，支持选择性下载
 // @author       LingCi
 // @copyright    2025, LingCi(https://github.com/zhaohuaxs)
 // @match        https://www.silisilifun.com/*
@@ -34,7 +34,7 @@
         // 查找目标元素
         const scoreWrap = document.querySelector('h1.scores-info > div.score-wrap');
         const titleElement = document.querySelector('h1.scores-info > a');
-        const playListContainer = document.querySelector('div.play-list > div.play-pannel-box > div:nth-child(1) > #playlist-play-4');
+        const playListContainer = document.querySelector('div.play-list > div.play-pannel-box > div[style*="display:block"] > ul.playlist.clearfix');
 
         // 检查元素是否存在
         if (scoreWrap && titleElement && playListContainer) {
@@ -73,7 +73,7 @@
             scoreWrap.appendChild(invertSelectBtn);
 
             // 获取所有剧集的链接元素
-            const episodeElements = document.querySelectorAll('div.play-list > div.play-pannel-box > div:nth-child(1) > #playlist-play-4 > li > a');
+            const episodeElements = document.querySelectorAll('div.play-list > div.play-pannel-box > div[style*="display:block"] > ul.playlist.clearfix > li > a');
 
             // 为每个剧集链接添加复选框
             episodeElements.forEach((element, index) => {
@@ -127,7 +127,7 @@
                 const name = titleElement.textContent.trim();
                 
                 // 获取所有剧集的链接元素
-                const episodeElements = document.querySelectorAll('div.play-list > div.play-pannel-box > div:nth-child(1) > #playlist-play-4 > li > a');
+                const episodeElements = document.querySelectorAll('div.play-list > div.play-pannel-box > div[style*="display:block"] > ul.playlist.clearfix > li > a');
                 const dataIndexList = [];
                 
                 episodeElements.forEach((element, index) => {
