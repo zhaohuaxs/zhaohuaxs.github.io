@@ -109,9 +109,9 @@
             const urlParams = new URLSearchParams(window.location.search);
             const wd = urlParams.get('wd');
             const pg = urlParams.get('pg');
-            const index = urlParams.get('api');
+            const api = urlParams.get('api');
             // 初始化平台选择按钮
-            initPlatformSelection(index);
+            initPlatformSelection(api);
             // 执行搜索
             if (wd) {
                 const input = document.getElementById('link-input');
@@ -121,20 +121,21 @@
         });
         
         // 平台选择功能
-        function initPlatformSelection(index = 0) {
-            console.log("index", index)
-            if (!isNum(index)) {
-                index = 0;
+        function initPlatformSelection(api = 0) {
+            console.log("index", api)
+            let index = 0
+            if (isNum(api)) {
+                index = Number(api);
             }
             // 默认选中第一个平台
             const platformButtons = document.querySelectorAll('.platform-btn');
             if (index > platformButtons.length - 1 || index < 0) {
                 index = 0
             }
+            console.log("index", index)
             if (platformButtons.length > 0) {
                 platformButtons[index].classList.add('selected');
             }
-            console.log("index", index)
             
             // 为每个平台按钮添加点击事件
             platformButtons.forEach(button => {
