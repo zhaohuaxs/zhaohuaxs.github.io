@@ -8,11 +8,47 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="./icon/favicon.ico">
     <title>弹目|影视链接获取</title>
+    <style>
+        .platform-btn {
+            border-radius: 0.5rem;
+            border: 1px solid #D1D5DB;
+            color: #6B7280;
+            transition: all 0.2s ease;
+        }
+        
+        .platform-btn.selected {
+            background-color: #EC4899;
+            border-color: #EC4899;
+            color: white;
+        }
+    </style>
 </head>
 
 <body class="bg-blue-50 text-indigo-900">
     <div class="container mx-auto p-8 max-w-6xl">
         <h1 class="text-3xl font-bold mb-6">爱腾优官方链接获取</h1>
+
+        <!-- 平台选择 -->
+        <div class="mb-6">
+            <label class="block font-bold mb-2">请选择API平台：</label>
+            <div class="flex space-x-4">
+                <button class="platform-btn px-4 py-2 border rounded-lg text-gray-500 border-gray-300" 
+                        data-platform="听风" data-index="0"
+                        data-api="https://gctf.tfdh.top/api.php/provide/vod/">
+                    听风
+                </button>
+                <button class="platform-btn px-4 py-2 border rounded-lg text-gray-500 border-gray-300" 
+                        data-platform="山海" data-index="1"
+                        data-api="https://zy.sh0o.cn/api.php/provide/vod/">
+                    山海
+                </button>
+                <button class="platform-btn px-4 py-2 border rounded-lg text-gray-500 border-gray-300" 
+                        data-platform="789" data-index="2"
+                        data-api="https://www.caiji.cyou/api.php/provide/vod/">
+                    789
+                </button>
+            </div>
+        </div>
 
         <div class="mb-8">
             <label class="block font-bold mb-2">请输入影视名称：</label>
@@ -63,6 +99,7 @@
             input.value = '';
             updateFilter('wd', '');
             updateFilter('pg', '');
+            updateFilter('api', '');
             input.focus();
             this.classList.add('hidden');
         });
@@ -72,12 +109,54 @@
             const urlParams = new URLSearchParams(window.location.search);
             const wd = urlParams.get('wd');
             const pg = urlParams.get('pg');
+            const index = urlParams.get('api');
+            // 初始化平台选择按钮
+            initPlatformSelection(index);
+            // 执行搜索
             if (wd) {
                 const input = document.getElementById('link-input');
                 input.value = wd;
                 fetchLink(pg); // 直接调用查询函数
             }
         });
+        
+        // 平台选择功能
+        function initPlatformSelection(index = 0) {
+            console.log("index", index)
+            if (!isNum(index)) {
+                index = 0;
+            }
+            // 默认选中第一个平台
+            const platformButtons = document.querySelectorAll('.platform-btn');
+            if (index > platformButtons.length - 1 || index < 0) {
+                index = 0
+            }
+            if (platformButtons.length > 0) {
+                platformButtons[index].classList.add('selected');
+            }
+            console.log("index", index)
+            
+            // 为每个平台按钮添加点击事件
+            platformButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有按钮的选中状态
+                    platformButtons.forEach(btn => btn.classList.remove('selected'));
+                    
+                    // 为当前按钮添加选中状态
+                    this.classList.add('selected');
+                });
+            });
+        }
+
+        function isNum(value) {
+            let num = 0;
+            try {
+                num = Number(value)
+            } catch (e) {
+                return false
+            }
+            return (typeof num === 'number' && !isNaN(num));
+        }
 
         function fetchLink(page = 1) {
             const input = document.getElementById('link-input');
@@ -85,15 +164,24 @@
             if (!page) {
                 page = 1;
             }
-            
             if (!vodName) {
                 alert('请输入有效的影视名');
                 return;
             }
+            if (!isNum(page)) {
+                page = 1;
+            }
             updateFilter('wd', vodName);
             updateFilter('pg', page);
             
-            fetch('https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent('https://vs.okcdn100.top/api.php/provide/vod/?ac=detail&wd=' + vodName + '&pg=' + page), {
+            // 获取选中的平台API地址
+            const selectedPlatform = document.querySelector('.platform-btn.selected');
+            const baseUrl = selectedPlatform ? selectedPlatform.getAttribute('data-api') : 'https://gctf.tfdh.top/api.php/provide/vod/';
+            if (selectedPlatform) {
+                updateFilter('api', selectedPlatform.getAttribute("data-index"));
+            }
+            
+            fetch('https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(baseUrl + '?ac=detail&wd=' + vodName + '&pg=' + page), {
                 method: 'GET',
                 headers: {
                     //'X-Requested-With': 'XMLHttpRequest',
